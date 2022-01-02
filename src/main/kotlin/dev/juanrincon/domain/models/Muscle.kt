@@ -4,6 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Muscle(
+    val id: Int,
     val name: String,
-    val imageUrl: String
+    val imageUrl: String?
 )
