@@ -1,11 +1,14 @@
 package dev.juanrincon.di
 
 import dev.juanrincon.data.repositories.CategoryRepository
+import dev.juanrincon.data.repositories.ExerciseRepository
 import dev.juanrincon.data.repositories.MuscleRepository
 import dev.juanrincon.data.services.CategoryService
+import dev.juanrincon.data.services.ExerciseService
 import dev.juanrincon.data.services.MuscleService
 import dev.juanrincon.domain.interfaces.Repository
 import dev.juanrincon.domain.models.Category
+import dev.juanrincon.domain.models.Exercise
 import dev.juanrincon.domain.models.Muscle
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -19,4 +22,8 @@ val mainModule = module(createdAtStart = true) {
     single { MuscleService(get(named<Muscle>())) }
 
     single<Repository<Muscle>>(named<Muscle>()) { MuscleRepository() }
+
+    single { ExerciseService(get(named<Exercise>())) }
+
+    single<Repository<Exercise>>(named<Exercise>()) { ExerciseRepository() }
 }

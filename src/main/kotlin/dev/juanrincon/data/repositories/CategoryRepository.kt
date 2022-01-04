@@ -41,10 +41,13 @@ class CategoryRepository : Repository<Category> {
     }
 
     override fun update(entry: Category) = transaction {
-        val id = Categories.update({ Categories.id eq entry.id }) {
+        Categories.update({ Categories.id eq entry.id }) {
             it[name] = entry.name
             it[imageUrl] = entry.imageUrl
         }
-        getById(id)
+
+        entry.id?.let {
+            getById(it)
+        }?: entry
     }
 }
