@@ -5,8 +5,7 @@ import dev.juanrincon.domain.daos.Exercises
 import dev.juanrincon.domain.daos.Muscles
 import dev.juanrincon.domain.interfaces.Repository
 import dev.juanrincon.domain.models.Exercise
-import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class ExerciseRepository : Repository<Exercise> {
@@ -62,15 +61,38 @@ class ExerciseRepository : Repository<Exercise> {
             }
     }
 
-    override fun delete(id: Int): Boolean {
-        TODO("Not yet implemented")
+    override fun delete(id: Int) = transaction {
+        0 < Exercises.deleteWhere { Exercises.id eq id }
     }
 
-    override fun add(entry: Exercise): Exercise {
-        TODO("Not yet implemented")
+    override fun add(entry: Exercise) = transaction {
+        val category = Categories.slice(Categories.id).select { Categories.name eq entry.category }
+        val muscle = Muscles.slice(Muscles.id).select { Muscles.name eq entry.muscle }
+
+        val id = Exercises.insertAndGetId {
+            it[name] = entry.name
+            it[imageUrl] = entry.imageUrl
+            it[videoUrl] = entry.videoUrl
+            it[categoryId] = category
+            it[muscleId] = muscle
+        }
+        getById(id.value)
     }
 
-    override fun update(entry: Exercise): Exercise {
-        TODO("Not yet implemented")
+    override fun update(entry: Exercise) = transaction {
+        val category = Categories.slice(Categories.id).select { Categories.name eq entry.category }
+        val muscle = Muscles.slice(Muscles.id).select { Muscles.name eq entry.muscle }
+
+        Exercises.update({ Exercises.id eq entry.id }) {
+            it[name] = entry.name
+            it[imageUrl] = entry.imageUrl
+            it[videoUrl] = entry.videoUrl
+            it[categoryId] = category
+            it[muscleId] = muscle
+        }
+
+        entry.id?.let {
+            getById(it)
+        }?: entry
     }
 }

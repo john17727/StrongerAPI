@@ -42,10 +42,13 @@ class MuscleRepository: Repository<Muscle> {
     }
 
     override fun update(entry: Muscle) = transaction {
-        val id = Categories.update({ Categories.id eq entry.id }) {
+        Categories.update({ Categories.id eq entry.id }) {
             it[name] = entry.name
             it[imageUrl] = entry.imageUrl
         }
-        getById(id)
+
+        entry.id?.let {
+            getById(it)
+        }?: entry
     }
 }
