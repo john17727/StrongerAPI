@@ -4,11 +4,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Exercise(
-    var id: Int?,
+    var id: Int = 0,
     val name: String,
     val imageUrl: String?,
     val videoUrl: String?,
     val instructions: List<Instruction>?,
-    val muscle: String,
-    val category: String
+    val muscle: Muscle,
+    val category: Category
 )
