@@ -4,6 +4,7 @@ val logbackVersion: String by project
 val koinVersion: String by project
 val exposedVersion: String by project
 val mysqlVersion: String by project
+val postgreVersion: String by project
 
 plugins {
     application
@@ -43,6 +44,7 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
     implementation("mysql:mysql-connector-java:$mysqlVersion")
+    implementation("org.postgresql:postgresql:$postgreVersion")
 
     testImplementation("io.ktor:ktor-server-tests:$ktorVersion")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion")
