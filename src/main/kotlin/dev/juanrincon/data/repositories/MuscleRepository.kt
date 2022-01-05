@@ -1,54 +1,43 @@
 package dev.juanrincon.data.repositories
 
-import dev.juanrincon.domain.daos.Categories
-import dev.juanrincon.domain.daos.Muscles
+import dev.juanrincon.domain.daos.MuscleDAO
 import dev.juanrincon.domain.interfaces.Repository
 import dev.juanrincon.domain.models.Muscle
-import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class MuscleRepository: Repository<Muscle> {
     override fun getById(id: Int) = transaction {
-        Muscles.select { Muscles.id eq id }.map {
-            Muscle(
-                it[Muscles.id].value,
-                it[Muscles.name],
-                it[Muscles.imageUrl]
-            )
-        }.first()
+        getDAOById(id)?.toModel()
     }
 
     override fun getAll() = transaction {
-        Muscles.selectAll().map {
-            Muscle(
-                it[Muscles.id].value,
-                it[Muscles.name],
-                it[Muscles.imageUrl]
-            )
-        }
+        MuscleDAO.all().map { it.toModel() }
     }
 
     override fun delete(id: Int) = transaction {
-        0 < Muscles.deleteWhere { Muscles.id eq id }
+        getDAOById(id)?.let {
+            it.delete()
+            true
+        } ?: false
     }
 
     override fun add(entry: Muscle) = transaction {
-        val id = Muscles.insertAndGetId {
-            it[name] = entry.name
-            it[imageUrl] = entry.imageUrl
-        }
-
-        getById(id.value)
+        MuscleDAO.new {
+            name = entry.name
+            imageUrl = entry.imageUrl
+        }.toModel()
     }
 
     override fun update(entry: Muscle) = transaction {
-        Categories.update({ Categories.id eq entry.id }) {
-            it[name] = entry.name
-            it[imageUrl] = entry.imageUrl
-        }
-
         entry.id?.let {
-            getById(it)
-        }?: entry
+            val muscle = getDAOById(it)
+
+            muscle?.name = entry.name
+            muscle?.imageUrl = entry.imageUrl
+
+            muscle?.toModel()
+        }
     }
+
+    private fun getDAOById(id: Int) = MuscleDAO.findById(id)
 }
