@@ -1,7 +1,10 @@
 package dev.juanrincon.plugins
 
+import dev.juanrincon.domain.daos.*
 import io.ktor.application.*
 import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.transactions.transaction
 
 fun Application.configureExposed() {
     val config = environment.config
@@ -17,4 +20,8 @@ fun Application.configureExposed() {
     val url = "jdbc:$type://$host:$port/$db"
 
     Database.connect(url, driver = driver, user = user, password = password)
+
+    transaction {
+        SchemaUtils.create(Categories, Muscles, Instructions, Exercises)
+    }
 }
