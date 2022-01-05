@@ -23,13 +23,14 @@ class ExerciseDAO(id: EntityID<Int>) : IntEntity(id), Mapper<Exercise> {
     var videoUrl by Exercises.videoUrl
     var category by CategoryDAO referencedOn Exercises.categoryId
     var muscle by MuscleDAO referencedOn Exercises.muscleId
+    private val instructions by InstructionDAO referrersOn Instructions.exerciseId
 
     override fun toModel() = Exercise(
         id.value,
         name,
         imageUrl,
         videoUrl,
-        null,
+        instructions.map { it.toModel() },
         muscle.toModel(),
         category.toModel()
     )

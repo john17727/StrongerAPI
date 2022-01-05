@@ -5,7 +5,7 @@ import dev.juanrincon.domain.interfaces.Repository
 import dev.juanrincon.domain.models.Muscle
 import org.jetbrains.exposed.sql.transactions.transaction
 
-class MuscleRepository: Repository<Muscle> {
+class MuscleRepository : Repository<Muscle> {
     override fun getById(id: Int) = transaction {
         getDAOById(id)?.toModel()
     }
@@ -29,14 +29,12 @@ class MuscleRepository: Repository<Muscle> {
     }
 
     override fun update(entry: Muscle) = transaction {
-        entry.id?.let {
-            val muscle = getDAOById(it)
+        val muscle = getDAOById(entry.id)
 
-            muscle?.name = entry.name
-            muscle?.imageUrl = entry.imageUrl
+        muscle?.name = entry.name
+        muscle?.imageUrl = entry.imageUrl
 
-            muscle?.toModel()
-        }
+        muscle?.toModel()
     }
 
     private fun getDAOById(id: Int) = MuscleDAO.findById(id)

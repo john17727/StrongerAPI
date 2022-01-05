@@ -3,7 +3,6 @@ package dev.juanrincon.data.repositories
 import dev.juanrincon.domain.daos.*
 import dev.juanrincon.domain.interfaces.Repository
 import dev.juanrincon.domain.models.Exercise
-import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class ExerciseRepository : Repository<Exercise> {
@@ -27,28 +26,54 @@ class ExerciseRepository : Repository<Exercise> {
         val categoryDAO = CategoryDAO.findById(entry.category.id)
         val muscleDAO = MuscleDAO.findById(entry.muscle.id)
 
-        ExerciseDAO.new {
+        val exerciseDAO = ExerciseDAO.new {
             name = entry.name
             imageUrl = entry.imageUrl
             videoUrl = entry.videoUrl
             category = categoryDAO!!
             muscle = muscleDAO!!
-        }.toModel()
+        }
+
+        entry.instructions?.forEach { instruction ->
+            InstructionDAO.new {
+                exercise = exerciseDAO
+                step = instruction.step
+                text = instruction.text
+            }
+        }
+
+        exerciseDAO.toModel()
     }
 
     override fun update(entry: Exercise) = transaction {
-        val exercise = getDAOById(entry.id)
+        val exerciseDAO = getDAOById(entry.id)
 
         val categoryDAO = CategoryDAO.findById(entry.category.id)
         val muscleDAO = MuscleDAO.findById(entry.muscle.id)
 
-        exercise?.name = entry.name
-        exercise?.imageUrl = entry.imageUrl
-        exercise?.videoUrl = entry.videoUrl
-        exercise?.category = categoryDAO!!
-        exercise?.muscle = muscleDAO!!
+        exerciseDAO?.name = entry.name
+        exerciseDAO?.imageUrl = entry.imageUrl
+        exerciseDAO?.videoUrl = entry.videoUrl
+        exerciseDAO?.category = categoryDAO!!
+        exerciseDAO?.muscle = muscleDAO!!
 
-        exercise?.toModel()
+        val currentInstructions = InstructionDAO.find { Instructions.exerciseId eq entry.id }
+
+        entry.instructions?.forEach { instruction ->
+            val instructionDAO = currentInstructions.find { it.step == instruction.step }
+
+            instructionDAO?.let {
+                it.exercise = exerciseDAO!!
+                it.step = instruction.step
+                it.text = instruction.text
+            } ?: InstructionDAO.new {
+                exercise = exerciseDAO!!
+                step = instruction.step
+                text = instruction.text
+            }
+        }
+
+        exerciseDAO?.toModel()
     }
 
     private fun getDAOById(id: Int) = ExerciseDAO.findById(id)
