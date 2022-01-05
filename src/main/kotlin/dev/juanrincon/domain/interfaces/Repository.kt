@@ -1,7 +1,7 @@
 package dev.juanrincon.domain.interfaces
 
 interface Repository<T> {
-    fun getById(id: Int): T
+    fun getById(id: Int): T?
 
     fun getAll(): List<T>
 
@@ -9,5 +9,5 @@ interface Repository<T> {
 
     fun add(entry: T): T
 
-    fun update(entry: T): T
+    fun update(entry: T): T?
 }
