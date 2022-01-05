@@ -1,8 +1,6 @@
 package dev.juanrincon.data.repositories
 
-import dev.juanrincon.domain.daos.Categories
-import dev.juanrincon.domain.daos.Exercises
-import dev.juanrincon.domain.daos.Muscles
+import dev.juanrincon.domain.daos.*
 import dev.juanrincon.domain.interfaces.Repository
 import dev.juanrincon.domain.models.Exercise
 import org.jetbrains.exposed.sql.*
@@ -10,89 +8,48 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 class ExerciseRepository : Repository<Exercise> {
     override fun getById(id: Int) = transaction {
-        Exercises
-            .innerJoin(Muscles)
-            .innerJoin(Categories)
-            .slice(
-                Exercises.id,
-                Exercises.name,
-                Exercises.imageUrl,
-                Exercises.videoUrl,
-                Muscles.name,
-                Categories.name
-            )
-            .select { Exercises.id eq id }
-            .map {
-                Exercise(
-                    it[Exercises.id].value,
-                    it[Exercises.name],
-                    it[Exercises.imageUrl],
-                    it[Exercises.videoUrl],
-                    null,
-                    it[Muscles.name],
-                    it[Categories.name]
-                )
-            }.first()
+        getDAOById(id)?.toModel()
     }
 
     override fun getAll() = transaction {
-        Exercises
-            .innerJoin(Muscles)
-            .innerJoin(Categories)
-            .slice(
-                Exercises.id,
-                Exercises.name,
-                Exercises.imageUrl,
-                Exercises.videoUrl,
-                Muscles.name,
-                Categories.name
-            )
-            .selectAll()
-            .map {
-                Exercise(
-                    it[Exercises.id].value,
-                    it[Exercises.name],
-                    it[Exercises.imageUrl],
-                    it[Exercises.videoUrl],
-                    null,
-                    it[Muscles.name],
-                    it[Categories.name]
-                )
-            }
+        ExerciseDAO.all().map { it.toModel() }
     }
 
     override fun delete(id: Int) = transaction {
-        0 < Exercises.deleteWhere { Exercises.id eq id }
+        getDAOById(id)?.let {
+            it.delete()
+            true
+        } ?: false
     }
 
     override fun add(entry: Exercise) = transaction {
-        val category = Categories.slice(Categories.id).select { Categories.name eq entry.category }
-        val muscle = Muscles.slice(Muscles.id).select { Muscles.name eq entry.muscle }
 
-        val id = Exercises.insertAndGetId {
-            it[name] = entry.name
-            it[imageUrl] = entry.imageUrl
-            it[videoUrl] = entry.videoUrl
-            it[categoryId] = category
-            it[muscleId] = muscle
-        }
-        getById(id.value)
+        val categoryDAO = CategoryDAO.findById(entry.category.id)
+        val muscleDAO = MuscleDAO.findById(entry.muscle.id)
+
+        ExerciseDAO.new {
+            name = entry.name
+            imageUrl = entry.imageUrl
+            videoUrl = entry.videoUrl
+            category = categoryDAO!!
+            muscle = muscleDAO!!
+        }.toModel()
     }
 
     override fun update(entry: Exercise) = transaction {
-        val category = Categories.slice(Categories.id).select { Categories.name eq entry.category }
-        val muscle = Muscles.slice(Muscles.id).select { Muscles.name eq entry.muscle }
+        val exercise = getDAOById(entry.id)
 
-        Exercises.update({ Exercises.id eq entry.id }) {
-            it[name] = entry.name
-            it[imageUrl] = entry.imageUrl
-            it[videoUrl] = entry.videoUrl
-            it[categoryId] = category
-            it[muscleId] = muscle
-        }
+        val categoryDAO = CategoryDAO.findById(entry.category.id)
+        val muscleDAO = MuscleDAO.findById(entry.muscle.id)
 
-        entry.id?.let {
-            getById(it)
-        }?: entry
+        exercise?.name = entry.name
+        exercise?.imageUrl = entry.imageUrl
+        exercise?.videoUrl = entry.videoUrl
+        exercise?.category = categoryDAO!!
+        exercise?.muscle = muscleDAO!!
+
+        exercise?.toModel()
     }
+
+    private fun getDAOById(id: Int) = ExerciseDAO.findById(id)
 }

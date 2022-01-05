@@ -30,14 +30,12 @@ class CategoryRepository : Repository<Category> {
     }
 
     override fun update(entry: Category) = transaction {
-        entry.id?.let {
-            val category = getDAOById(it)
+        val category = getDAOById(entry.id)
 
-            category?.name = entry.name
-            category?.imageUrl = entry.imageUrl
+        category?.name = entry.name
+        category?.imageUrl = entry.imageUrl
 
-            category?.toModel()
-        }
+        category?.toModel()
     }
 
     private fun getDAOById(id: Int) = CategoryDAO.findById(id)
