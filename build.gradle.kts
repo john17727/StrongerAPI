@@ -1,3 +1,5 @@
+import java.util.regex.Pattern.compile
+
 val ktorVersion: String by project
 val kotlinVersion: String by project
 val logbackVersion: String by project
@@ -36,14 +38,9 @@ dependencies {
     implementation("io.ktor:ktor-serialization-gson-jvm:$ktorVersion")
     implementation("io.ktor:ktor-server-netty-jvm:$ktorVersion")
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
-    testImplementation("io.ktor:ktor-server-tests-jvm:$ktorVersion")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$ktorVersion")
     implementation("mysql:mysql-connector-java:$mysqlVersion")
     implementation("com.zaxxer:HikariCP:$hikaricpVersion")
     implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
-
-    // Koin for Ktor
-    implementation("io.insert-koin:koin-ktor:$koinVersion")
 }

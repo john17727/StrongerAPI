@@ -1,28 +1,32 @@
 package dev.juanrincon.plugins
 
-import io.ktor.auth.*
-import io.ktor.auth.jwt.*
-import com.auth0.jwt.JWT
-import com.auth0.jwt.algorithms.Algorithm
-import io.ktor.application.*
+import dev.juanrincon.data.services.JwtService
+import dev.juanrincon.domain.interfaces.Repository
+import dev.juanrincon.domain.models.StrongerSession
+import dev.juanrincon.domain.models.User
+import io.ktor.server.application.*
+import io.ktor.server.auth.*
+import io.ktor.server.auth.jwt.*
+import io.ktor.server.sessions.*
 
-fun Application.configureSecurity() {
-    
+fun Application.configureSecurity(repo: Repository<User>, jwtService: JwtService) {
+    install(Sessions) {
+        cookie<StrongerSession>("STRONGER_SESSION") {
+            cookie.extensions["SameSite"] = "lax"
+        }
+    }
+
     authentication {
-            jwt {
-                val jwtAudience = environment.config.property("jwt.audience").getString()
-                realm = environment.config.property("jwt.realm").getString()
-                verifier(
-                    JWT
-                        .require(Algorithm.HMAC256("secret"))
-                        .withAudience(jwtAudience)
-                        .withIssuer(environment.config.property("jwt.domain").getString())
-                        .build()
-                )
-                validate { credential ->
-                    if (credential.payload.audience.contains(jwtAudience)) JWTPrincipal(credential.payload) else null
-                }
+        jwt("jwt") {
+            verifier(jwtService.verifier)
+            realm = "Stronger"
+            validate {
+                val payload = it.payload
+                val claim = payload.getClaim("id")
+                val claimString = claim.asInt()
+                val user = repo.getById(claimString)
+                user
             }
         }
-
+    }
 }

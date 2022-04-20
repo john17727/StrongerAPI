@@ -2,17 +2,16 @@ package dev.juanrincon.controllers
 
 import dev.juanrincon.data.services.CategoryService
 import dev.juanrincon.data.services.MuscleService
-import io.ktor.application.*
 import io.ktor.http.HttpStatusCode.Companion.NotFound
 import io.ktor.http.HttpStatusCode.Companion.OK
-import io.ktor.response.*
-import io.ktor.routing.*
-import org.koin.ktor.ext.inject
+import io.ktor.server.application.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 
-fun Route.typesController() {
-    val categoryService: CategoryService by inject()
-    val muscleService: MuscleService by inject()
-
+fun Route.typesController(
+    categoryService: CategoryService,
+    muscleService: MuscleService
+) {
     route("/api/types/category") {
         get {
             val response = categoryService.getAllCategories()

@@ -1,15 +1,12 @@
 package dev.juanrincon.controllers
 
-import dev.juanrincon.data.services.ExerciseService
-import io.ktor.application.*
 import io.ktor.http.HttpStatusCode.Companion.NotFound
 import io.ktor.http.HttpStatusCode.Companion.OK
-import io.ktor.response.*
-import io.ktor.routing.*
-import org.koin.ktor.ext.inject
+import io.ktor.server.application.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 
 fun Route.exercisesController() {
-    val service: ExerciseService by inject()
 
     route("api/exercise") {
         get {
