@@ -7,7 +7,7 @@ import dev.juanrincon.plugins.dbQuery
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class ExerciseRepository : Repository<Exercise> {
-    override suspend fun getById(id: Int) = dbQuery {
+    override suspend fun findById(id: Int) = dbQuery {
         getDAOById(id)?.toModel()
     }
 

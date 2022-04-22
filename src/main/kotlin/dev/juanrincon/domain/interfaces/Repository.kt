@@ -1,7 +1,7 @@
 package dev.juanrincon.domain.interfaces
 
 interface Repository<T> {
-    suspend fun getById(id: Int): T?
+    suspend fun findById(id: Int): T?
 
     suspend fun getAll(): List<T>
 

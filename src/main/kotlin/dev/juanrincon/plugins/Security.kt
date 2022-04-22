@@ -24,7 +24,7 @@ fun Application.configureSecurity(repo: Repository<User>, jwtService: JwtService
                 val payload = it.payload
                 val claim = payload.getClaim("id")
                 val claimString = claim.asInt()
-                val user = repo.getById(claimString)
+                val user = repo.findById(claimString)
                 user
             }
         }

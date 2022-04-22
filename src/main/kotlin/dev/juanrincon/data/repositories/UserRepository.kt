@@ -1,13 +1,18 @@
 package dev.juanrincon.data.repositories
 
 import dev.juanrincon.domain.daos.UserDAO
+import dev.juanrincon.domain.daos.Users
 import dev.juanrincon.domain.interfaces.Repository
 import dev.juanrincon.domain.models.User
 import dev.juanrincon.plugins.dbQuery
 
 class UserRepository: Repository<User> {
-    override suspend fun getById(id: Int) = dbQuery {
+    override suspend fun findById(id: Int) = dbQuery {
         getDAOById(id)?.toModel()
+    }
+
+    suspend fun findByEmail(email: String) = dbQuery {
+        UserDAO.find { Users.email eq email }.first().toModel()
     }
 
     override suspend fun getAll() = dbQuery {
