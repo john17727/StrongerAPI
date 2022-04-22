@@ -3,32 +3,33 @@ package dev.juanrincon.data.repositories
 import dev.juanrincon.domain.daos.MuscleDAO
 import dev.juanrincon.domain.interfaces.Repository
 import dev.juanrincon.domain.models.Muscle
+import dev.juanrincon.plugins.dbQuery
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class MuscleRepository : Repository<Muscle> {
-    override fun getById(id: Int) = transaction {
+    override suspend fun getById(id: Int) = dbQuery {
         getDAOById(id)?.toModel()
     }
 
-    override fun getAll() = transaction {
+    override suspend fun getAll() = dbQuery {
         MuscleDAO.all().map { it.toModel() }
     }
 
-    override fun delete(id: Int) = transaction {
+    override suspend fun delete(id: Int) = dbQuery {
         getDAOById(id)?.let {
             it.delete()
             true
         } ?: false
     }
 
-    override fun add(entry: Muscle) = transaction {
+    override suspend fun add(entry: Muscle) = dbQuery {
         MuscleDAO.new {
             name = entry.name
             imageUrl = entry.imageUrl
         }.toModel()
     }
 
-    override fun update(entry: Muscle) = transaction {
+    override suspend fun update(entry: Muscle) = dbQuery {
         val muscle = getDAOById(entry.id)
 
         muscle?.name = entry.name

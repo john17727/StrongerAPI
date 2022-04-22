@@ -6,7 +6,7 @@ import dev.juanrincon.domain.models.Muscle
 
 class MuscleService(private val repository: Repository<Muscle>) {
 
-    fun getAllMuscleTypes(): ApiResponse<List<Muscle>> {
+    suspend fun getAllMuscleTypes(): ApiResponse<List<Muscle>> {
         val muscles = repository.getAll()
 
         return if (muscles.isNotEmpty()) {

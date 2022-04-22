@@ -11,6 +11,7 @@ import io.ktor.server.http.content.*
 import io.ktor.server.locations.*
 import io.ktor.server.routing.*
 
+@KtorExperimentalLocationsAPI
 fun Application.configureRouting(userRepository: Repository<User>, jwtService: JwtService) {
     val categoryService = MainModule.getCategoryService()
     val muscleService = MainModule.getMuscleService()

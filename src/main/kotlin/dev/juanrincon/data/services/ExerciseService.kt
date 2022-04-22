@@ -6,7 +6,7 @@ import dev.juanrincon.domain.models.Exercise
 
 class ExerciseService(private val repository: Repository<Exercise>) {
 
-    fun getAllExercises(): ApiResponse<List<Exercise>> {
+    suspend fun getAllExercises(): ApiResponse<List<Exercise>> {
         val exercises = repository.getAll()
 
         return if (exercises.isNotEmpty()) {
