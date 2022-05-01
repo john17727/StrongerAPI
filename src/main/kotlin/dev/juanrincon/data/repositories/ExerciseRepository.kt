@@ -4,7 +4,6 @@ import dev.juanrincon.domain.daos.*
 import dev.juanrincon.domain.interfaces.Repository
 import dev.juanrincon.domain.models.Exercise
 import dev.juanrincon.plugins.dbQuery
-import org.jetbrains.exposed.sql.transactions.transaction
 
 class ExerciseRepository : Repository<Exercise> {
     override suspend fun findById(id: Int) = dbQuery {

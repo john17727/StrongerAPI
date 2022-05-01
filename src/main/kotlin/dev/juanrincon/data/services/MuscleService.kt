@@ -2,7 +2,6 @@ package dev.juanrincon.data.services
 
 import dev.juanrincon.data.state.ServiceResponse
 import dev.juanrincon.domain.interfaces.Repository
-import dev.juanrincon.domain.models.ApiResponse
 import dev.juanrincon.domain.models.Muscle
 import io.ktor.http.*
 

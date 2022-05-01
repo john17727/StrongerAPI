@@ -4,7 +4,6 @@ import dev.juanrincon.domain.daos.MuscleDAO
 import dev.juanrincon.domain.interfaces.Repository
 import dev.juanrincon.domain.models.Muscle
 import dev.juanrincon.plugins.dbQuery
-import org.jetbrains.exposed.sql.transactions.transaction
 
 class MuscleRepository : Repository<Muscle> {
     override suspend fun findById(id: Int) = dbQuery {

@@ -1,7 +1,6 @@
 package dev.juanrincon.data.services
 
 import dev.juanrincon.data.state.ServiceResponse
-import dev.juanrincon.domain.models.ApiResponse
 import dev.juanrincon.domain.models.Category
 import dev.juanrincon.domain.interfaces.Repository
 import io.ktor.http.*

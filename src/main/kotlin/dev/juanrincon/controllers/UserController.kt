@@ -3,7 +3,6 @@ package dev.juanrincon.controllers
 import dev.juanrincon.API_VERSION
 import dev.juanrincon.data.services.JwtService
 import dev.juanrincon.data.services.UserService
-import dev.juanrincon.data.state.ServiceResponse
 import dev.juanrincon.data.state.ServiceResponse.Failed
 import dev.juanrincon.data.state.ServiceResponse.Success
 import dev.juanrincon.domain.models.ApiResponse
