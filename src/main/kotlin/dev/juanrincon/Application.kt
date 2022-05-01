@@ -17,3 +17,5 @@ fun Application.module() {
     configureRouting(userRepository, jwtService)
     configureSerialization()
 }
+
+const val API_VERSION = "/v1"

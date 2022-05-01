@@ -2,6 +2,7 @@ package dev.juanrincon.plugins
 
 import dev.juanrincon.controllers.exercisesController
 import dev.juanrincon.controllers.typesController
+import dev.juanrincon.controllers.userController
 import dev.juanrincon.data.services.JwtService
 import dev.juanrincon.di.MainModule
 import dev.juanrincon.domain.interfaces.Repository
@@ -15,10 +16,12 @@ import io.ktor.server.routing.*
 fun Application.configureRouting(userRepository: Repository<User>, jwtService: JwtService) {
     val categoryService = MainModule.getCategoryService()
     val muscleService = MainModule.getMuscleService()
+    val userService = MainModule.getUserService(userRepository)
     install(Locations)
     routing {
         typesController(categoryService, muscleService)
         exercisesController()
+        userController(userService, jwtService)
         // Static plugin. Try to access `/static/index.html`
         static("api/gifs") {
             resources("gifs")

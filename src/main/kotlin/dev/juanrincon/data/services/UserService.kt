@@ -6,8 +6,6 @@ import dev.juanrincon.data.utilities.hash
 import dev.juanrincon.domain.interfaces.Repository
 import dev.juanrincon.domain.models.User
 import io.ktor.http.*
-import io.ktor.server.application.*
-import io.ktor.server.response.*
 
 class UserService(val repository: Repository<User>) {
 
