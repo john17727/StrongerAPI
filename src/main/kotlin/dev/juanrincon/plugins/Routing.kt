@@ -16,11 +16,12 @@ import io.ktor.server.routing.*
 fun Application.configureRouting(userRepository: Repository<User>, jwtService: JwtService) {
     val categoryService = MainModule.getCategoryService()
     val muscleService = MainModule.getMuscleService()
+    val exerciseService = MainModule.getExerciseService()
     val userService = MainModule.getUserService(userRepository)
     install(Locations)
     routing {
         typesController(categoryService, muscleService)
-        exercisesController()
+        exercisesController(exerciseService)
         userController(userService, jwtService)
         // Static plugin. Try to access `/static/index.html`
         static("api/gifs") {
