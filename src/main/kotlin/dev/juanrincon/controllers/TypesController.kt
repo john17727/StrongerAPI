@@ -27,11 +27,9 @@ fun Route.typesController(
 
     route("/api/types/muscle") {
         get {
-            val response = muscleService.getAllMuscleTypes()
-            if (response.success) {
-                call.respond(OK, response)
-            } else {
-                call.respond(NotFound, response)
+            when (val response = muscleService.getAllMuscleTypes()) {
+                is Success -> call.respond(response.status, ApiResponse.success(response.data))
+                is Failed -> call.respond(response.status, ApiResponse.fail(response.message))
             }
         }
     }
