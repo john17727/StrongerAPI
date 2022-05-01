@@ -4,6 +4,8 @@ import dev.juanrincon.API_VERSION
 import dev.juanrincon.data.services.JwtService
 import dev.juanrincon.data.services.UserService
 import dev.juanrincon.data.state.ServiceResponse
+import dev.juanrincon.data.state.ServiceResponse.Failed
+import dev.juanrincon.data.state.ServiceResponse.Success
 import dev.juanrincon.domain.models.ApiResponse
 import dev.juanrincon.domain.models.User
 import io.ktor.server.application.*
@@ -34,12 +36,24 @@ fun Route.userController(
     post<UserCreateRoute> {
         val user = call.receive<User>()
         when (val response = userService.addNewUser(user)) {
-            is ServiceResponse.Success -> {
+            is Success -> {
                 val currentUser = response.data
                 call.sessions.set(currentUser.id)
                 call.respond(response.status, ApiResponse.success(jwtService.generateToken(currentUser))) // TODO: Change data to object
             }
-            is ServiceResponse.Failed -> call.respond(response.status, ApiResponse.fail(response.message))
+            is Failed -> call.respond(response.status, ApiResponse.fail(response.message))
+        }
+    }
+
+    post<UserLoginRoute> {
+        val user = call.receive<User>()
+        when (val response = userService.loginUser(user)) {
+            is Success -> {
+                val currentUser = response.data
+                call.sessions.set(currentUser.id)
+                call.respond(response.status, ApiResponse.success(jwtService.generateToken(currentUser))) // TODO: Change data to object
+            }
+            is Failed -> call.respond(response.status, ApiResponse.fail(response.message))
         }
     }
 }
