@@ -6,30 +6,30 @@ import dev.juanrincon.domain.models.Category
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class CategoryRepository : Repository<Category> {
-    override fun getById(id: Int) = transaction {
+    override suspend fun findById(id: Int) = transaction {
         getDAOById(id)?.toModel()
     }
 
 
-    override fun getAll() = transaction {
+    override suspend fun getAll() = transaction {
         CategoryDAO.all().map { it.toModel() }
     }
 
-    override fun delete(id: Int) = transaction {
+    override suspend fun delete(id: Int) = transaction {
         getDAOById(id)?.let {
             it.delete()
             true
         } ?: false
     }
 
-    override fun add(entry: Category) = transaction {
+    override suspend fun add(entry: Category) = transaction {
         CategoryDAO.new {
             name = entry.name
             imageUrl = entry.imageUrl
         }.toModel()
     }
 
-    override fun update(entry: Category) = transaction {
+    override suspend fun update(entry: Category) = transaction {
         val category = getDAOById(entry.id)
 
         category?.name = entry.name
