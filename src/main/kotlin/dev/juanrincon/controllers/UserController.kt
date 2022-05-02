@@ -6,6 +6,7 @@ import dev.juanrincon.data.services.UserService
 import dev.juanrincon.data.state.ServiceResponse.Failed
 import dev.juanrincon.data.state.ServiceResponse.Success
 import dev.juanrincon.domain.models.ApiResponse
+import dev.juanrincon.domain.models.StrongerSession
 import dev.juanrincon.domain.models.User
 import io.ktor.server.application.*
 import io.ktor.server.locations.*
@@ -37,7 +38,7 @@ fun Route.userController(
         when (val response = userService.addNewUser(user)) {
             is Success -> {
                 val currentUser = response.data
-                call.sessions.set(currentUser.id)
+                call.sessions.set(StrongerSession(currentUser.id))
                 call.respond(response.status, ApiResponse.success(jwtService.generateToken(currentUser))) // TODO: Change data to object
             }
             is Failed -> call.respond(response.status, ApiResponse.fail(response.message))
@@ -49,7 +50,7 @@ fun Route.userController(
         when (val response = userService.loginUser(user)) {
             is Success -> {
                 val currentUser = response.data
-                call.sessions.set(currentUser.id)
+                call.sessions.set(StrongerSession(currentUser.id))
                 call.respond(response.status, ApiResponse.success(jwtService.generateToken(currentUser))) // TODO: Change data to object
             }
             is Failed -> call.respond(response.status, ApiResponse.fail(response.message))

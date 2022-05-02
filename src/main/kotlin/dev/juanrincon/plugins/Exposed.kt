@@ -28,28 +28,26 @@ fun Application.configureExposed() {
 
     Database.connect(hikari())
     transaction {
-        SchemaUtils.create(Categories, Muscles, Instructions, Exercises)
+        SchemaUtils.create(Categories, Muscles, Instructions, Exercises, Users)
     }
 }
 
-private fun hikari(): HikariDataSource {
-    val config = HikariConfig()
-    config.driverClassName = System.getenv("JDBC_DRIVER")
-    config.jdbcUrl = System.getenv("JDBC_DATABASE_URL")
-    config.maximumPoolSize = 3
-    config.isAutoCommit = false
-    config.transactionIsolation = "TRANSACTION_REPEATABLE_READ"
+private fun hikari() = HikariDataSource(HikariConfig().apply {
+    driverClassName = System.getenv("JDBC_DRIVER")
+    jdbcUrl = System.getenv("JDBC_DATABASE_URL")
+    maximumPoolSize = 3
+    isAutoCommit = false
+    transactionIsolation = "TRANSACTION_REPEATABLE_READ"
     val user = System.getenv("DB_USER")
     if (user != null) {
-        config.username = user
+        username = user
     }
-    val password = System.getenv("DB_PASSWORD")
-    if (password != null) {
-        config.password = password
+    val dbPassword = System.getenv("DB_PASSWORD")
+    if (dbPassword != null) {
+        password = dbPassword
     }
-    config.validate()
-    return HikariDataSource(config)
-}
+    validate()
+})
 
 suspend fun <T> dbQuery(block: () -> T): T =
     withContext(Dispatchers.IO) {
