@@ -3,25 +3,25 @@ package dev.juanrincon.data.repositories
 import dev.juanrincon.domain.daos.*
 import dev.juanrincon.domain.interfaces.Repository
 import dev.juanrincon.domain.models.Exercise
-import org.jetbrains.exposed.sql.transactions.transaction
+import dev.juanrincon.plugins.dbQuery
 
 class ExerciseRepository : Repository<Exercise> {
-    override fun getById(id: Int) = transaction {
+    override suspend fun findById(id: Int) = dbQuery {
         getDAOById(id)?.toModel()
     }
 
-    override fun getAll() = transaction {
+    override suspend fun getAll() = dbQuery {
         ExerciseDAO.all().map { it.toModel() }
     }
 
-    override fun delete(id: Int) = transaction {
+    override suspend fun delete(id: Int) = dbQuery {
         getDAOById(id)?.let {
             it.delete()
             true
         } ?: false
     }
 
-    override fun add(entry: Exercise) = transaction {
+    override suspend fun add(entry: Exercise) = dbQuery {
 
         val categoryDAO = CategoryDAO.findById(entry.category.id)
         val muscleDAO = MuscleDAO.findById(entry.muscle.id)
@@ -45,7 +45,7 @@ class ExerciseRepository : Repository<Exercise> {
         exerciseDAO.toModel()
     }
 
-    override fun update(entry: Exercise) = transaction {
+    override suspend fun update(entry: Exercise) = dbQuery {
         val exerciseDAO = getDAOById(entry.id)
 
         val categoryDAO = CategoryDAO.findById(entry.category.id)

@@ -1,25 +1,27 @@
 package dev.juanrincon.controllers
 
+import dev.juanrincon.API_VERSION
 import dev.juanrincon.data.services.ExerciseService
-import io.ktor.application.*
-import io.ktor.http.HttpStatusCode.Companion.NotFound
-import io.ktor.http.HttpStatusCode.Companion.OK
-import io.ktor.response.*
-import io.ktor.routing.*
-import org.koin.ktor.ext.inject
+import dev.juanrincon.data.state.ServiceResponse
+import dev.juanrincon.data.state.ServiceResponse.Success
+import dev.juanrincon.domain.models.ApiResponse
+import io.ktor.server.application.*
+import io.ktor.server.locations.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 
-fun Route.exercisesController() {
-    val service: ExerciseService by inject()
+const val EXERCISES = "$API_VERSION/exercises"
 
-    route("api/exercise") {
-        get {
-            val response = service.getAllExercises()
+@KtorExperimentalLocationsAPI
+@Location(EXERCISES)
+class ExercisesRoute
 
-            if (response.success) {
-                call.respond(OK, response)
-            } else {
-                call.respond(NotFound, response)
-            }
+fun Route.exercisesController(exerciseService: ExerciseService) {
+
+    get<ExercisesRoute> {
+        when (val response = exerciseService.getAllExercises()) {
+            is Success -> call.respond(response.status, ApiResponse.success(response.data))
+            is ServiceResponse.Failed -> call.respond(response.status, ApiResponse.fail(response.message))
         }
     }
 }

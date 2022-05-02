@@ -1,8 +1,7 @@
 package dev.juanrincon.domain.models
 
-import kotlinx.serialization.Serializable
+import java.io.Serializable
 
-@Serializable
 data class Exercise(
     var id: Int = 0,
     val name: String,
@@ -11,4 +10,4 @@ data class Exercise(
     val instructions: List<Instruction>?,
     val muscle: Muscle,
     val category: Category
-)
+) : Serializable

@@ -3,27 +3,18 @@ package dev.juanrincon.di
 import dev.juanrincon.data.repositories.CategoryRepository
 import dev.juanrincon.data.repositories.ExerciseRepository
 import dev.juanrincon.data.repositories.MuscleRepository
+import dev.juanrincon.data.repositories.UserRepository
 import dev.juanrincon.data.services.CategoryService
 import dev.juanrincon.data.services.ExerciseService
 import dev.juanrincon.data.services.MuscleService
+import dev.juanrincon.data.services.UserService
 import dev.juanrincon.domain.interfaces.Repository
-import dev.juanrincon.domain.models.Category
-import dev.juanrincon.domain.models.Exercise
-import dev.juanrincon.domain.models.Muscle
-import org.koin.core.qualifier.named
-import org.koin.dsl.module
+import dev.juanrincon.domain.models.User
 
-val mainModule = module(createdAtStart = true) {
+object MainModule {
 
-    single { CategoryService(get(named<Category>())) }
-
-    single<Repository<Category>>(named<Category>()) { CategoryRepository() }
-
-    single { MuscleService(get(named<Muscle>())) }
-
-    single<Repository<Muscle>>(named<Muscle>()) { MuscleRepository() }
-
-    single { ExerciseService(get(named<Exercise>())) }
-
-    single<Repository<Exercise>>(named<Exercise>()) { ExerciseRepository() }
+    fun getExerciseService() = ExerciseService(ExerciseRepository())
+    fun getCategoryService() = CategoryService(CategoryRepository())
+    fun getMuscleService() = MuscleService(MuscleRepository())
+    fun getUserService(userRepository: Repository<User>) = UserService(userRepository)
 }

@@ -1,13 +1,13 @@
 package dev.juanrincon.domain.interfaces
 
 interface Repository<T> {
-    fun getById(id: Int): T?
+    suspend fun findById(id: Int): T?
 
-    fun getAll(): List<T>
+    suspend fun getAll(): List<T>
 
-    fun delete(id: Int): Boolean
+    suspend fun delete(id: Int): Boolean
 
-    fun add(entry: T): T
+    suspend fun add(entry: T): T
 
-    fun update(entry: T): T?
+    suspend fun update(entry: T): T?
 }

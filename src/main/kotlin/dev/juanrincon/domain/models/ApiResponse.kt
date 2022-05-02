@@ -1,10 +1,8 @@
 package dev.juanrincon.domain.models
 
-import kotlinx.serialization.Serializable
 
-@Serializable
 data class ApiResponse<T>(
-    val success: Boolean,
+    val status: String,
     val message: String? = null,
     val previousPage: Int? = null,
     val nextPage: Int? = null,
@@ -15,22 +13,23 @@ data class ApiResponse<T>(
             data: T,
             previousPage: Int? = null,
             nextPage: Int? = null
-        ): ApiResponse<T> {
-            return ApiResponse(
-                success = true,
-                data = data,
-                previousPage = previousPage,
-                nextPage = nextPage
-            )
-        }
+        ) = ApiResponse(
+            status = "success",
+            data = data,
+            previousPage = previousPage,
+            nextPage = nextPage
+        )
 
-        fun <T> error(
+        fun fail(message: String) = ApiResponse<Nothing>(
+            status = "fail",
+            message = message
+        )
+
+        fun error(
             message: String
-        ): ApiResponse<T> {
-            return ApiResponse(
-                success = false,
-                message = message
-            )
-        }
+        ) = ApiResponse<Nothing>(
+            status = "error",
+            message = message
+        )
     }
 }
