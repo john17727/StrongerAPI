@@ -33,7 +33,10 @@ class UserService(val repository: Repository<User>) {
             if (currentUser.password == user.passwordHash) {
                 ServiceResponse.Success(currentUser)
             } else {
-                ServiceResponse.Failed(HttpStatusCode.BadRequest, "Your login credentials don match an account in our system")
+                ServiceResponse.Failed(
+                    HttpStatusCode.BadRequest,
+                    "Your login credentials don match an account in our system"
+                )
             }
         } catch (e: Throwable) {
             ServiceResponse.Failed(HttpStatusCode.BadRequest, "There was a problem retrieving the user")
