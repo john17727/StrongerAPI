@@ -11,6 +11,7 @@ object Users: IntIdTable() {
     val firstName = varchar("firstName", 50).nullable()
     val lastName = varchar("lastName", 50).nullable()
     val displayName = varchar("displayName", 50)
+    val imageUrl = varchar("imageUrl", 250).nullable()
     val email = varchar("email", 50)
     val phone = long("phone").nullable()
     val countryCode = integer("countryCode").nullable()
@@ -22,6 +23,7 @@ class UserDAO(id: EntityID<Int>): IntEntity(id), Mapper<User> {
     var firstName by Users.firstName
     var lastName by Users.lastName
     var displayName by Users.displayName
+    var imageUrl by Users.imageUrl
     var email by Users.email
     var phone by Users.phone
     var countryCode by Users.countryCode
@@ -31,6 +33,7 @@ class UserDAO(id: EntityID<Int>): IntEntity(id), Mapper<User> {
         id.value,
         email,
         displayName,
+        imageUrl,
         firstName,
         lastName,
         phone,
