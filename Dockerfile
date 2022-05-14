@@ -1,12 +1,10 @@
-FROM gradle:jdk8 as builder
-
+FROM gradle:7-jdk11 AS build
 COPY --chown=gradle:gradle . /home/gradle/src
 WORKDIR /home/gradle/src
-RUN gradle installDist
+RUN gradle shadowJar --no-daemon
 
-FROM openjdk:8-jdk
+FROM openjdk:11
 EXPOSE 8080:8080
 RUN mkdir /app
-COPY --from=builder /home/gradle/src/build/install/dev.juanrincon.strongerapi/ /app/
-WORKDIR /app/bin
-CMD ["./dev.juanrincon.strongerapi"]
+COPY --from=build /home/gradle/src/build/libs/*.jar /app/tractionAPI.jar
+ENTRYPOINT ["java","-jar","/app/tractionAPI.jar"]
