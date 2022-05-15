@@ -10,7 +10,7 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 
-fun Application.configureExposed() {
+fun Application.configureExposed(environment: ApplicationEnvironment) {
 //    val config = environment.config
 //    val databasePath = "ktor.database."
 //    val type = config.property(databasePath + "type").getString()
@@ -26,23 +26,23 @@ fun Application.configureExposed() {
 //    Database.connect(url, driver = driver, user = user, password = password)
 //
 
-    Database.connect(hikari())
+    Database.connect(hikari(environment))
     transaction {
         SchemaUtils.create(Categories, Muscles, Instructions, Exercises, Users)
     }
 }
 
-private fun hikari() = HikariDataSource(HikariConfig().apply {
-    driverClassName = System.getenv("JDBC_DRIVER")
-    jdbcUrl = System.getenv("JDBC_DATABASE_URL")
+private fun hikari(environment: ApplicationEnvironment) = HikariDataSource(HikariConfig().apply {
+    driverClassName = environment.config.propertyOrNull("ktor.database.driver")?.getString()
+    jdbcUrl = environment.config.propertyOrNull("ktor.database.host")?.getString()
     maximumPoolSize = 3
     isAutoCommit = false
     transactionIsolation = "TRANSACTION_REPEATABLE_READ"
-    val user = System.getenv("DB_USER")
+    val user = environment.config.propertyOrNull("ktor.database.user")?.getString()
     if (user != null) {
         username = user
     }
-    val dbPassword = System.getenv("DB_PASSWORD")
+    val dbPassword = environment.config.propertyOrNull("ktor.database.password")?.getString()
     if (dbPassword != null) {
         password = dbPassword
     }

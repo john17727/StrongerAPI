@@ -17,7 +17,7 @@ fun Application.configureRouting(userRepository: Repository<User>, jwtService: J
     val categoryService = MainModule.getCategoryService()
     val muscleService = MainModule.getMuscleService()
     val exerciseService = MainModule.getExerciseService()
-    val userService = MainModule.getUserService(userRepository)
+    val userService = MainModule.getUserService(userRepository, environment)
     install(Locations)
     routing {
         typesController(categoryService, muscleService)
