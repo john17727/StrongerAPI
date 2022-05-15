@@ -1,1 +1,1 @@
-rootProject.name = "dev.juanrincon.strongerapi"
+rootProject.name = "app.tracktion.tracktionapi"

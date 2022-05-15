@@ -15,7 +15,7 @@ plugins {
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
-group = "dev.juanrincon"
+group = "app.tracktion"
 version = "0.0.1"
 application {
     mainClass.set("io.ktor.server.netty.EngineMain")
