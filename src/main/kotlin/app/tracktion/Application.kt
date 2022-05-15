@@ -12,9 +12,10 @@ fun main(args: Array<String>): Unit =
 @Suppress("unused")
 @KtorExperimentalLocationsAPI
 fun Application.module() {
-    configureExposed()
+    configureExposed(environment)
+
     val userRepository = UserRepository()
-    val jwtService = JwtService()
+    val jwtService = JwtService(environment)
     configureSecurity(userRepository, jwtService)
     configureRouting(userRepository, jwtService)
     configureSerialization()
