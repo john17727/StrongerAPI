@@ -9,17 +9,16 @@ import app.tracktion.domain.interfaces.Repository
 import app.tracktion.domain.models.User
 import io.ktor.server.application.*
 import io.ktor.server.http.content.*
-import io.ktor.server.locations.*
+import io.ktor.server.resources.*
 import io.ktor.server.routing.*
 import java.io.File
 
-@KtorExperimentalLocationsAPI
 fun Application.configureRouting(userRepository: Repository<User>, jwtService: JwtService) {
     val categoryService = MainModule.getCategoryService()
     val muscleService = MainModule.getMuscleService()
     val exerciseService = MainModule.getExerciseService()
     val userService = MainModule.getUserService(userRepository, environment)
-    install(Locations)
+    install(Resources)
     routing {
         typesController(categoryService, muscleService)
         exercisesController(exerciseService)
