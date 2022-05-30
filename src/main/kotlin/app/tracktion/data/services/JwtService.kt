@@ -4,12 +4,13 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
 import app.tracktion.domain.models.User
+import io.ktor.server.application.*
 import java.util.*
 
-class JwtService {
+class JwtService(environment: ApplicationEnvironment) {
 
     private val issuer = "todoServer"
-    private val jwtSecret = System.getenv("JWT_SECRET")
+    private val jwtSecret = environment.config.propertyOrNull("ktor.database.driver")?.getString()
     private val algorithm = Algorithm.HMAC512(jwtSecret)
 
     val verifier: JWTVerifier = JWT
