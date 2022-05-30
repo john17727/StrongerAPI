@@ -15,6 +15,10 @@ class UserRepository: Repository<User> {
         UserDAO.find { Users.email eq email }.first().toModel()
     }
 
+    suspend fun userExists(email: String) = dbQuery {
+        UserDAO.find { Users.email eq email }.count() > 0
+    }
+
     override suspend fun getAll() = dbQuery {
         UserDAO.all().map { it.toModel() }
     }
