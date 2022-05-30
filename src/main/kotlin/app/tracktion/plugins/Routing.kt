@@ -11,6 +11,7 @@ import io.ktor.server.application.*
 import io.ktor.server.http.content.*
 import io.ktor.server.locations.*
 import io.ktor.server.routing.*
+import java.io.File
 
 @KtorExperimentalLocationsAPI
 fun Application.configureRouting(userRepository: Repository<User>, jwtService: JwtService) {
@@ -24,11 +25,14 @@ fun Application.configureRouting(userRepository: Repository<User>, jwtService: J
         exercisesController(exerciseService)
         userController(userService, jwtService)
         // Static plugin. Try to access `/static/index.html`
-        static("api/gifs") {
-            resources("gifs")
-        }
-        static("api/images") {
-            resources("images")
+        static("/") {
+            staticRootFolder = File("resources")
+            static("api/gifs") {
+                files("gifs")
+            }
+            static("api/images") {
+                files("images")
+            }
         }
     }
 }
