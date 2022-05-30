@@ -17,7 +17,11 @@ class UserService(val repository: Repository<User>, private val environment: App
 
         user.passwordHash = hash(user.password, environment)
         return try {
-            ServiceResponse.Success(repository.add(user), HttpStatusCode.Created)
+            if ((repository as UserRepository).userExists(user.email)) {
+                ServiceResponse.Failed(HttpStatusCode.Conflict, "User with this email already exists")
+            } else {
+                ServiceResponse.Success(repository.add(user), HttpStatusCode.Created)
+            }
         } catch (e: Throwable) {
             ServiceResponse.Failed(HttpStatusCode.BadRequest, "Problems creating User")
         }
