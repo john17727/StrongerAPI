@@ -16,5 +16,6 @@ object MainModule {
     fun getExerciseService() = ExerciseService(ExerciseRepository())
     fun getCategoryService() = CategoryService(CategoryRepository())
     fun getMuscleService() = MuscleService(MuscleRepository())
-    fun getUserService(userRepository: Repository<User>, environment: ApplicationEnvironment) = UserService(userRepository, environment)
+    fun getUserService(userRepository: Repository<User>, environment: ApplicationEnvironment) =
+        UserService(userRepository, environment)
 }
