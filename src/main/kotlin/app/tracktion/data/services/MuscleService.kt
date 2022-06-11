@@ -1,11 +1,11 @@
 package app.tracktion.data.services
 
 import app.tracktion.data.state.ServiceResponse
-import app.tracktion.domain.interfaces.Repository
+import app.tracktion.domain.interfaces.ReadRepository
 import app.tracktion.domain.models.Muscle
 import io.ktor.http.*
 
-class MuscleService(private val repository: Repository<Muscle>) {
+class MuscleService(private val repository: ReadRepository<Muscle>) {
 
     suspend fun getAllMuscleTypes(): ServiceResponse<List<Muscle>> {
         val muscles = repository.getAll()
