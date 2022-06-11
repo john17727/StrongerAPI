@@ -2,7 +2,6 @@ package app.tracktion.data.repositories
 
 import app.tracktion.domain.daos.*
 import app.tracktion.domain.interfaces.ReadRepository
-import app.tracktion.domain.interfaces.Repository
 import app.tracktion.domain.models.Exercise
 import app.tracktion.plugins.dbQuery
 
