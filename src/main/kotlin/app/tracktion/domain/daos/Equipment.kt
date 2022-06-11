@@ -7,7 +7,7 @@ import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 import app.tracktion.domain.models.Equipment as EquipmentModel
 
-object Equipment : IntIdTable() {
+object Equipment : IntIdTable("equipment") {
     val name = varchar("name", 25)
     val imageUrl = varchar("imageUrl", 250).nullable()
 }
