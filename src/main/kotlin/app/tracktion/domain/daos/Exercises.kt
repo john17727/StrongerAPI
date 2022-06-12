@@ -13,6 +13,8 @@ object Exercises : IntIdTable("exercise") {
     val videoUrl = varchar("videoUrl", 250).nullable()
     val categoryId = reference("categoryId", Categories)
     val muscleId = reference("muscleId", Muscles)
+    val equipmentId = reference("equipmentId", Equipment)
+    val splitId = reference("splitId", Splits)
 }
 
 class ExerciseDAO(id: EntityID<Int>) : IntEntity(id), Mapper<Exercise> {
@@ -23,6 +25,8 @@ class ExerciseDAO(id: EntityID<Int>) : IntEntity(id), Mapper<Exercise> {
     var videoUrl by Exercises.videoUrl
     var category by CategoryDAO referencedOn Exercises.categoryId
     var muscle by MuscleDAO referencedOn Exercises.muscleId
+    var equipment by EquipmentDAO referencedOn Exercises.equipmentId
+    var split by SplitDAO referencedOn  Exercises.splitId
     private val instructions by InstructionDAO referrersOn Instructions.exerciseId
 
     override fun toModel() = Exercise(
@@ -32,6 +36,8 @@ class ExerciseDAO(id: EntityID<Int>) : IntEntity(id), Mapper<Exercise> {
         videoUrl,
         instructions.map { it.toModel() },
         muscle.toModel(),
-        category.toModel()
+        category.toModel(),
+        equipment.toModel(),
+        split.toModel()
     )
 }

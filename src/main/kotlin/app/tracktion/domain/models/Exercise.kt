@@ -9,5 +9,7 @@ data class Exercise(
     val videoUrl: String?,
     val instructions: List<Instruction>?,
     val muscle: Muscle,
-    val category: Category
+    val category: Category,
+    val equipment: Equipment,
+    val split: Split
 ) : Serializable

@@ -14,5 +14,7 @@ class SplitRepository : ReadRepository<Split> {
         SplitDAO.all().map { it.toModel() }
     }
 
+    override suspend fun getAllPaginated(limit: Int, offset: Long) = getAll()
+
     private fun getDAOById(id: Int) = SplitDAO.findById(id)
 }

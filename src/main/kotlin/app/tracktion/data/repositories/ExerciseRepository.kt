@@ -14,5 +14,9 @@ class ExerciseRepository : ReadRepository<Exercise> {
         ExerciseDAO.all().map { it.toModel() }
     }
 
+    override suspend fun getAllPaginated(limit: Int, offset: Long) = dbQuery {
+        ExerciseDAO.all().limit(limit, offset).map { it.toModel() }
+    }
+
     private fun getDAOById(id: Int) = ExerciseDAO.findById(id)
 }

@@ -14,5 +14,7 @@ class EquipmentRepository : ReadRepository<Equipment> {
         EquipmentDAO.all().map { it.toModel() }
     }
 
+    override suspend fun getAllPaginated(limit: Int, offset: Long) = getAll()
+
     private fun getDAOById(id: Int) = EquipmentDAO.findById(id)
 }

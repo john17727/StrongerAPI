@@ -14,5 +14,7 @@ class MuscleRepository : ReadRepository<Muscle> {
         MuscleDAO.all().map { it.toModel() }
     }
 
+    override suspend fun getAllPaginated(limit: Int, offset: Long) = getAll()
+
     private fun getDAOById(id: Int) = MuscleDAO.findById(id)
 }

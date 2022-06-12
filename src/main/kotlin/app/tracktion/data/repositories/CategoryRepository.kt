@@ -15,5 +15,7 @@ class CategoryRepository : ReadRepository<Category> {
         CategoryDAO.all().map { it.toModel() }
     }
 
+    override suspend fun getAllPaginated(limit: Int, offset: Long) = getAll()
+
     private fun getDAOById(id: Int) = CategoryDAO.findById(id)
 }
