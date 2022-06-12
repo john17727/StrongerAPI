@@ -7,8 +7,8 @@ import io.ktor.http.*
 
 class ExerciseService(private val repository: ReadRepository<Exercise>) {
 
-    suspend fun getAllExercises(): ServiceResponse<List<Exercise>> {
-        val exercises = repository.getAll()
+    suspend fun getAllExercises(limit: Int, offset: Long): ServiceResponse<List<Exercise>> {
+        val exercises = repository.getAllPaginated(limit, offset)
 
         return if (exercises.isNotEmpty()) {
             ServiceResponse.Success(exercises)
