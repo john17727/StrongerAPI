@@ -1,18 +1,18 @@
 package app.tracktion.data.repositories
 
-import app.tracktion.domain.daos.MuscleDAO
+import app.tracktion.domain.daos.SplitDAO
 import app.tracktion.domain.interfaces.ReadRepository
-import app.tracktion.domain.models.Muscle
+import app.tracktion.domain.models.Split
 import app.tracktion.plugins.dbQuery
 
-class MuscleRepository : ReadRepository<Muscle> {
+class SplitRepository : ReadRepository<Split> {
     override suspend fun findById(id: Int) = dbQuery {
         getDAOById(id)?.toModel()
     }
 
     override suspend fun getAll() = dbQuery {
-        MuscleDAO.all().map { it.toModel() }
+        SplitDAO.all().map { it.toModel() }
     }
 
-    private fun getDAOById(id: Int) = MuscleDAO.findById(id)
+    private fun getDAOById(id: Int) = SplitDAO.findById(id)
 }

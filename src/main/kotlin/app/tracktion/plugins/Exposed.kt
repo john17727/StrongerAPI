@@ -13,7 +13,15 @@ import org.jetbrains.exposed.sql.transactions.transaction
 fun Application.configureExposed(environment: ApplicationEnvironment) {
     Database.connect(hikari(environment))
     transaction {
-        SchemaUtils.create(Categories, Muscles, Instructions, Exercises, Users)
+        SchemaUtils.create(
+            Categories,
+            Muscles,
+            Instructions,
+            Exercises,
+            Users,
+            Equipment,
+            Splits
+        )
     }
 }
 

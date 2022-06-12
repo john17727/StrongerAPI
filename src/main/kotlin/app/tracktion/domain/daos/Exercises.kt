@@ -7,7 +7,7 @@ import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 
-object Exercises : IntIdTable() {
+object Exercises : IntIdTable("exercise") {
     val name = varchar("name", 50)
     val imageUrl = varchar("imageUrl", 250).nullable()
     val videoUrl = varchar("videoUrl", 250).nullable()

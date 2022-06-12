@@ -1,21 +1,21 @@
 package app.tracktion.domain.daos
 
 import app.tracktion.domain.interfaces.Mapper
-import app.tracktion.domain.models.Category
+import app.tracktion.domain.models.Split
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 
-object Categories: IntIdTable("category") {
+object Splits : IntIdTable("split") {
     val name = varchar("name", 25)
     val imageUrl = varchar("imageUrl", 250).nullable()
 }
 
-class CategoryDAO(id: EntityID<Int>): IntEntity(id), Mapper<Category> {
-    companion object : IntEntityClass<CategoryDAO>(Categories)
-    var name by Categories.name
-    var imageUrl by Categories.imageUrl
+class SplitDAO(id: EntityID<Int>): IntEntity(id), Mapper<Split> {
+    companion object : IntEntityClass<SplitDAO>(Splits)
+    var name by Equipment.name
+    var imageUrl by Equipment.imageUrl
 
-    override fun toModel() = Category(id.value, name, imageUrl)
+    override fun toModel() = Split(id.value, name, imageUrl)
 }

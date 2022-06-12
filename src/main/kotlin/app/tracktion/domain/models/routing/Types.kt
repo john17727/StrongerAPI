@@ -13,4 +13,12 @@ class Types {
     @Serializable
     @Resource("muscles")
     class Muscles(val parent: Types = Types())
+
+    @Serializable
+    @Resource("equipment")
+    class Equipment(val parent: Types = Types())
+
+    @Serializable
+    @Resource("splits")
+    class Splits(val parent: Types = Types())
 }

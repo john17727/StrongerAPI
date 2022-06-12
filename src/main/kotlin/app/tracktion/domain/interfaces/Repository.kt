@@ -1,9 +1,6 @@
 package app.tracktion.domain.interfaces
 
-interface Repository<T> {
-    suspend fun findById(id: Int): T?
-
-    suspend fun getAll(): List<T>
+interface Repository<T> : ReadRepository<T> {
 
     suspend fun delete(id: Int): Boolean
 
