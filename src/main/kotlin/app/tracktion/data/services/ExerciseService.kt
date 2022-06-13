@@ -1,5 +1,6 @@
 package app.tracktion.data.services
 
+import app.tracktion.data.repositories.ExerciseRepository
 import app.tracktion.data.state.ServiceResponse
 import app.tracktion.domain.interfaces.ReadRepository
 import app.tracktion.domain.models.Exercise
@@ -16,4 +17,6 @@ class ExerciseService(private val repository: ReadRepository<Exercise>) {
             ServiceResponse.Failed(HttpStatusCode.NotFound, "Failed to get exercises")
         }
     }
+
+    suspend fun getCount() = repository.getCount()
 }

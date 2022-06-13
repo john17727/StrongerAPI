@@ -14,8 +14,8 @@ object Splits : IntIdTable("split") {
 
 class SplitDAO(id: EntityID<Int>): IntEntity(id), Mapper<Split> {
     companion object : IntEntityClass<SplitDAO>(Splits)
-    var name by Equipment.name
-    var imageUrl by Equipment.imageUrl
+    var name by Splits.name
+    var imageUrl by Splits.imageUrl
 
     override fun toModel() = Split(id.value, name, imageUrl)
 }

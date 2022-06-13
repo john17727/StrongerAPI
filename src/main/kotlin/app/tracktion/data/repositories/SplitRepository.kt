@@ -16,5 +16,9 @@ class SplitRepository : ReadRepository<Split> {
 
     override suspend fun getAllPaginated(limit: Int, offset: Long) = getAll()
 
+    override suspend fun getCount() = dbQuery {
+        SplitDAO.count()
+    }
+
     private fun getDAOById(id: Int) = SplitDAO.findById(id)
 }

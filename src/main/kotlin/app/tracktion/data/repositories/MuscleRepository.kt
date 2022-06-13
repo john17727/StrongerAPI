@@ -16,5 +16,9 @@ class MuscleRepository : ReadRepository<Muscle> {
 
     override suspend fun getAllPaginated(limit: Int, offset: Long) = getAll()
 
+    override suspend fun getCount() = dbQuery {
+        MuscleDAO.count()
+    }
+
     private fun getDAOById(id: Int) = MuscleDAO.findById(id)
 }

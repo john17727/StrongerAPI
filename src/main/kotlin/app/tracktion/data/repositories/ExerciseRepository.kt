@@ -18,5 +18,9 @@ class ExerciseRepository : ReadRepository<Exercise> {
         ExerciseDAO.all().limit(limit, offset).map { it.toModel() }
     }
 
+    override suspend fun getCount() = dbQuery {
+        ExerciseDAO.count()
+    }
+
     private fun getDAOById(id: Int) = ExerciseDAO.findById(id)
 }
