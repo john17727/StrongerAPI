@@ -2,6 +2,7 @@ package app.tracktion.domain.daos
 
 import app.tracktion.domain.interfaces.Mapper
 import app.tracktion.domain.models.Exercise
+import app.tracktion.domain.models.Instruction
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -34,10 +35,18 @@ class ExerciseDAO(id: EntityID<Int>) : IntEntity(id), Mapper<Exercise> {
         name,
         imageUrl,
         videoUrl,
-        instructions.map { it.toModel() },
+        getInstructions(),
         muscle.toModel(),
         category.toModel(),
         equipment.toModel(),
         split.toModel()
     )
+
+    private fun getInstructions(): List<Instruction>? {
+        return if (instructions.empty()) {
+            null
+        } else {
+            instructions.map { it.toModel() }
+        }
+    }
 }
