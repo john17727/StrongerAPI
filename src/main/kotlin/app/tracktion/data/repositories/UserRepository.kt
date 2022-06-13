@@ -23,6 +23,14 @@ class UserRepository: Repository<User> {
         UserDAO.all().map { it.toModel() }
     }
 
+    override suspend fun getAllPaginated(limit: Int, offset: Long) = dbQuery {
+        UserDAO.all().limit(limit, offset).map { it.toModel() }
+    }
+
+    override suspend fun getCount() = dbQuery {
+        UserDAO.count()
+    }
+
     override suspend fun delete(id: Int) = dbQuery {
         getDAOById(id)?.let {
             it.delete()

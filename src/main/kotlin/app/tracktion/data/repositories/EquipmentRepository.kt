@@ -14,5 +14,11 @@ class EquipmentRepository : ReadRepository<Equipment> {
         EquipmentDAO.all().map { it.toModel() }
     }
 
+    override suspend fun getAllPaginated(limit: Int, offset: Long) = getAll()
+
+    override suspend fun getCount() = dbQuery {
+        EquipmentDAO.count()
+    }
+
     private fun getDAOById(id: Int) = EquipmentDAO.findById(id)
 }

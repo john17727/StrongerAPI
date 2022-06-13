@@ -2,6 +2,7 @@ package app.tracktion.domain.daos
 
 import app.tracktion.domain.interfaces.Mapper
 import app.tracktion.domain.models.Exercise
+import app.tracktion.domain.models.Instruction
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -13,6 +14,8 @@ object Exercises : IntIdTable("exercise") {
     val videoUrl = varchar("videoUrl", 250).nullable()
     val categoryId = reference("categoryId", Categories)
     val muscleId = reference("muscleId", Muscles)
+    val equipmentId = reference("equipmentId", Equipment)
+    val splitId = reference("splitId", Splits)
 }
 
 class ExerciseDAO(id: EntityID<Int>) : IntEntity(id), Mapper<Exercise> {
@@ -23,6 +26,8 @@ class ExerciseDAO(id: EntityID<Int>) : IntEntity(id), Mapper<Exercise> {
     var videoUrl by Exercises.videoUrl
     var category by CategoryDAO referencedOn Exercises.categoryId
     var muscle by MuscleDAO referencedOn Exercises.muscleId
+    var equipment by EquipmentDAO referencedOn Exercises.equipmentId
+    var split by SplitDAO referencedOn  Exercises.splitId
     private val instructions by InstructionDAO referrersOn Instructions.exerciseId
 
     override fun toModel() = Exercise(
@@ -30,8 +35,18 @@ class ExerciseDAO(id: EntityID<Int>) : IntEntity(id), Mapper<Exercise> {
         name,
         imageUrl,
         videoUrl,
-        instructions.map { it.toModel() },
+        getInstructions(),
         muscle.toModel(),
-        category.toModel()
+        category.toModel(),
+        equipment.toModel(),
+        split.toModel()
     )
+
+    private fun getInstructions(): List<Instruction>? {
+        return if (instructions.empty()) {
+            null
+        } else {
+            instructions.map { it.toModel() }
+        }
+    }
 }

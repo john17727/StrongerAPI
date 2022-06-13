@@ -4,20 +4,23 @@ package app.tracktion.domain.models
 data class ApiResponse<T>(
     val status: String,
     val message: String? = null,
-    val previousPage: Int? = null,
-    val nextPage: Int? = null,
+    val limit: Int? = null,
+    val previousOffset: Long? = null,
+    val nextOffset: Long? = null,
     val data: T? = null
 ) {
     companion object {
         fun <T> success(
             data: T,
-            previousPage: Int? = null,
-            nextPage: Int? = null
+            limit: Int? = null,
+            previousOffset: Long? = null,
+            nextOffset: Long? = null
         ) = ApiResponse(
             status = "success",
             data = data,
-            previousPage = previousPage,
-            nextPage = nextPage
+            limit = limit,
+            previousOffset = previousOffset,
+            nextOffset = nextOffset
         )
 
         fun fail(message: String) = ApiResponse<Nothing>(
