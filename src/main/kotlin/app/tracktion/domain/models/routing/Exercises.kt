@@ -9,4 +9,8 @@ class Exercises {
     @Serializable
     @Resource("count")
     class Count(val parent: Exercises = Exercises())
+
+    @Serializable
+    @Resource("{id}")
+    class Id(val parent: Exercises = Exercises(), val id: Int)
 }

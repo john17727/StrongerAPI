@@ -2,6 +2,7 @@ package app.tracktion.controllers
 
 import app.tracktion.data.services.ExerciseService
 import app.tracktion.data.state.ServiceResponse
+import app.tracktion.data.state.ServiceResponse.Failed
 import app.tracktion.data.state.ServiceResponse.Success
 import app.tracktion.data.utilities.Constants
 import app.tracktion.data.utilities.Constants.LIMIT
@@ -30,11 +31,18 @@ fun Route.exercisesController(exerciseService: ExerciseService) {
                     UtilityTools.getNextOffset(limit, offset, exerciseService.getCount())
                 )
             )
-            is ServiceResponse.Failed -> call.respond(response.status, ApiResponse.fail(response.message))
+            is Failed -> call.respond(response.status, ApiResponse.fail(response.message))
         }
     }
 
     get<Exercises.Count> {
         call.respond(OK, ApiResponse.success(exerciseService.getCount()))
+    }
+
+    get<Exercises.Id> { exercise ->
+        when (val response = exerciseService.getExercisesById(exercise.id)) {
+            is Success -> call.respond(response.status, ApiResponse.success(response.data))
+            is Failed -> call.respond(response.status, ApiResponse.fail(response.message))
+        }
     }
 }
