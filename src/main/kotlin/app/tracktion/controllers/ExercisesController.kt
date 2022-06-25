@@ -8,6 +8,8 @@ import app.tracktion.data.utilities.Constants.LIMIT
 import app.tracktion.data.utilities.UtilityTools
 import app.tracktion.domain.models.ApiResponse
 import app.tracktion.domain.models.routing.Exercises
+import io.ktor.http.*
+import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.server.application.*
 import io.ktor.server.resources.*
 import io.ktor.server.response.*
@@ -30,5 +32,9 @@ fun Route.exercisesController(exerciseService: ExerciseService) {
             )
             is ServiceResponse.Failed -> call.respond(response.status, ApiResponse.fail(response.message))
         }
+    }
+
+    get<Exercises.Count> {
+        call.respond(OK, ApiResponse.success(exerciseService.getCount()))
     }
 }
