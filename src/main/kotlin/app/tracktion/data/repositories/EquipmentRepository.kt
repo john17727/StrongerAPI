@@ -1,11 +1,23 @@
 package app.tracktion.data.repositories
 
 import app.tracktion.domain.daos.EquipmentDAO
-import app.tracktion.domain.interfaces.ReadRepository
+import app.tracktion.domain.interfaces.TypeRepository
 import app.tracktion.domain.models.Equipment
+import app.tracktion.domain.models.Exercise
 import app.tracktion.plugins.dbQuery
+import app.tracktion.domain.daos.Equipment as EquipmentEntity
 
-class EquipmentRepository : ReadRepository<Equipment> {
+class EquipmentRepository : TypeRepository<Equipment> {
+    override suspend fun getExercisesFor(name: String, limit: Int, offset: Long) = dbQuery {
+        EquipmentDAO.find { EquipmentEntity.name eq name }.first()
+            .exercises.limit(limit, offset).map { it.toModel() }
+    }
+
+    override suspend fun getExerciseCountFor(name: String) = dbQuery {
+        EquipmentDAO.find { EquipmentEntity.name eq name }.first()
+            .exercises.count()
+    }
+
     override suspend fun findById(id: Int) = dbQuery {
         getDAOById(id)?.toModel()
     }

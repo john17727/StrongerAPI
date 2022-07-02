@@ -8,12 +8,16 @@ import app.tracktion.data.state.ServiceResponse.Failed
 import app.tracktion.data.state.ServiceResponse.Success
 import app.tracktion.data.utilities.Constants
 import app.tracktion.data.utilities.UtilityTools
+import app.tracktion.data.utilities.UtilityTools.Companion.getNextOffset
+import app.tracktion.data.utilities.UtilityTools.Companion.getPreviousOffset
+import app.tracktion.data.utilities.getLimit
 import app.tracktion.domain.models.ApiResponse
 import app.tracktion.domain.models.routing.Types
 import io.ktor.server.application.*
 import io.ktor.server.resources.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.util.pipeline.*
 
 fun Route.typesController(
     categoryService: CategoryService,
@@ -29,13 +33,7 @@ fun Route.typesController(
     }
 
     get<Types.Categories.Exercises> { category ->
-        val limit = (call.request.queryParameters["limit"]?.toInt() ?: Constants.LIMIT).let {
-            if (it > Constants.MAX_LIMIT) {
-                Constants.MAX_LIMIT
-            } else {
-                it
-            }
-        }
+        val limit = getLimit()
         val offset = call.request.queryParameters["offset"]?.toLong() ?: 0
 
         val name = category.name.replace('_', ' ')
@@ -49,8 +47,8 @@ fun Route.typesController(
                         response.data,
                         count,
                         limit,
-                        UtilityTools.getPreviousOffset(limit, offset),
-                        UtilityTools.getNextOffset(limit, offset, count)
+                        getPreviousOffset(limit, offset),
+                        getNextOffset(limit, offset, count)
                     )
                 )
             }
@@ -68,6 +66,30 @@ fun Route.typesController(
     get<Types.Equipment> {
         when (val response = equipmentService.getAllEquipmentTypes()) {
             is Success -> call.respond(response.status, ApiResponse.success(response.data))
+            is Failed -> call.respond(response.status, ApiResponse.fail(response.message))
+        }
+    }
+
+    get<Types.Equipment.Exercises> { category ->
+        val limit = getLimit()
+        val offset = call.request.queryParameters["offset"]?.toLong() ?: 0
+
+        val name = category.name.replace('_', ' ')
+
+        when (val response = equipmentService.getExercisesForEquipment(name, limit, offset)) {
+            is Success -> {
+                val count = equipmentService.getExerciseCountFor(name)
+                call.respond(
+                    response.status,
+                    ApiResponse.success(
+                        response.data,
+                        count,
+                        limit,
+                        getPreviousOffset(limit, offset),
+                        getNextOffset(limit, offset, count)
+                    )
+                )
+            }
             is Failed -> call.respond(response.status, ApiResponse.fail(response.message))
         }
     }

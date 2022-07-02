@@ -20,7 +20,11 @@ class Types {
 
     @Serializable
     @Resource("equipment")
-    class Equipment(val parent: Types = Types())
+    class Equipment(val parent: Types = Types()) {
+        @Serializable
+        @Resource("{name}/exercises")
+        class Exercises(val parent: Equipment = Equipment(), val name: String)
+    }
 
     @Serializable
     @Resource("splits")
