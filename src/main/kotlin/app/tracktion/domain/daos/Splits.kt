@@ -1,5 +1,6 @@
 package app.tracktion.domain.daos
 
+import app.tracktion.domain.daos.CategoryDAO.Companion.referrersOn
 import app.tracktion.domain.interfaces.Mapper
 import app.tracktion.domain.models.Split
 import org.jetbrains.exposed.dao.IntEntity
@@ -16,6 +17,7 @@ class SplitDAO(id: EntityID<Int>): IntEntity(id), Mapper<Split> {
     companion object : IntEntityClass<SplitDAO>(Splits)
     var name by Splits.name
     var imageUrl by Splits.imageUrl
+    val exercises by ExerciseDAO referrersOn Exercises.splitId
 
     override fun toModel() = Split(id.value, name, imageUrl)
 }

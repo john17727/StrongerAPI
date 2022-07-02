@@ -16,6 +16,7 @@ class EquipmentDAO(id: EntityID<Int>): IntEntity(id), Mapper<EquipmentModel> {
     companion object : IntEntityClass<EquipmentDAO>(Equipment)
     var name by Equipment.name
     var imageUrl by Equipment.imageUrl
+    val exercises by ExerciseDAO referrersOn Exercises.equipmentId
 
     override fun toModel() = EquipmentModel(id.value, name, imageUrl)
 }

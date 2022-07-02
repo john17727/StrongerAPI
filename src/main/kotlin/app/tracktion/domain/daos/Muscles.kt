@@ -1,5 +1,6 @@
 package app.tracktion.domain.daos
 
+import app.tracktion.domain.daos.CategoryDAO.Companion.referrersOn
 import app.tracktion.domain.interfaces.Mapper
 import app.tracktion.domain.models.Muscle
 import org.jetbrains.exposed.dao.IntEntity
@@ -16,6 +17,7 @@ class MuscleDAO(id: EntityID<Int>): IntEntity(id), Mapper<Muscle> {
     companion object : IntEntityClass<MuscleDAO>(Muscles)
     var name by Muscles.name
     var imageUrl by Muscles.imageUrl
+    val exercises by ExerciseDAO referrersOn Exercises.muscleId
 
     override fun toModel() = Muscle(id.value, name, imageUrl)
 }

@@ -1,11 +1,21 @@
 package app.tracktion.data.repositories
 
 import app.tracktion.domain.daos.MuscleDAO
-import app.tracktion.domain.interfaces.ReadRepository
+import app.tracktion.domain.daos.Muscles
+import app.tracktion.domain.interfaces.TypeRepository
 import app.tracktion.domain.models.Muscle
 import app.tracktion.plugins.dbQuery
 
-class MuscleRepository : ReadRepository<Muscle> {
+class MuscleRepository : TypeRepository<Muscle> {
+    override suspend fun getExercisesFor(name: String, limit: Int, offset: Long) = dbQuery {
+        MuscleDAO.find { Muscles.name eq name }.first()
+            .exercises.limit(limit, offset).map { it.toModel() }
+    }
+
+    override suspend fun getExerciseCountFor(name: String) = dbQuery {
+        MuscleDAO.find { Muscles.name eq name }.first()
+            .exercises.count()
+    }
     override suspend fun findById(id: Int) = dbQuery {
         getDAOById(id)?.toModel()
     }
