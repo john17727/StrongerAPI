@@ -6,6 +6,7 @@ import app.tracktion.data.state.ServiceResponse.Failed
 import app.tracktion.data.state.ServiceResponse.Success
 import app.tracktion.data.utilities.Constants
 import app.tracktion.data.utilities.Constants.LIMIT
+import app.tracktion.data.utilities.Constants.MAX_LIMIT
 import app.tracktion.data.utilities.UtilityTools
 import app.tracktion.domain.models.ApiResponse
 import app.tracktion.domain.models.routing.Exercises
@@ -19,7 +20,13 @@ import io.ktor.server.routing.*
 fun Route.exercisesController(exerciseService: ExerciseService) {
 
     get<Exercises> {
-        val limit = call.request.queryParameters["limit"]?.toInt() ?: LIMIT
+        val limit = call.request.queryParameters["limit"]?.toInt() ?: LIMIT.let {
+            if (it > MAX_LIMIT) {
+                MAX_LIMIT
+            } else {
+                it
+            }
+        }
         val offset = call.request.queryParameters["offset"]?.toLong() ?: 0
         when (val response = exerciseService.getAllExercises(limit, offset)) {
             is Success -> call.respond(
