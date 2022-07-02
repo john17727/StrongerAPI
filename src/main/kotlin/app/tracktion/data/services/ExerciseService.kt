@@ -18,5 +18,13 @@ class ExerciseService(private val repository: ReadRepository<Exercise>) {
         }
     }
 
+    suspend fun getExercisesById(id: Int): ServiceResponse<Exercise> {
+        val exercise = repository.findById(id)
+
+        return exercise?.let {
+            ServiceResponse.Success(it)
+        } ?: ServiceResponse.Failed(HttpStatusCode.NotFound, "No exercise with id $id was found")
+    }
+
     suspend fun getCount() = repository.getCount()
 }
