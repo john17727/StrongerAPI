@@ -1,5 +1,5 @@
 package app.tracktion.data.utilities
 
 object Constants {
-    const val LIMIT = 20
+    const val LIMIT = 100
 }
