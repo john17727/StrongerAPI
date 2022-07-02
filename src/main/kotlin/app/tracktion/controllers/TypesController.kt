@@ -63,6 +63,30 @@ fun Route.typesController(
         }
     }
 
+    get<Types.Muscles.Exercises> { category ->
+        val limit = getLimit()
+        val offset = call.request.queryParameters["offset"]?.toLong() ?: 0
+
+        val name = category.name.replace('_', ' ')
+
+        when (val response = muscleService.getExercisesForMuscle(name, limit, offset)) {
+            is Success -> {
+                val count = muscleService.getExerciseCountFor(name)
+                call.respond(
+                    response.status,
+                    ApiResponse.success(
+                        response.data,
+                        count,
+                        limit,
+                        getPreviousOffset(limit, offset),
+                        getNextOffset(limit, offset, count)
+                    )
+                )
+            }
+            is Failed -> call.respond(response.status, ApiResponse.fail(response.message))
+        }
+    }
+
     get<Types.Equipment> {
         when (val response = equipmentService.getAllEquipmentTypes()) {
             is Success -> call.respond(response.status, ApiResponse.success(response.data))
