@@ -16,6 +16,7 @@ class CategoryDAO(id: EntityID<Int>): IntEntity(id), Mapper<Category> {
     companion object : IntEntityClass<CategoryDAO>(Categories)
     var name by Categories.name
     var imageUrl by Categories.imageUrl
+    val exercises by ExerciseDAO referrersOn Exercises.categoryId
 
     override fun toModel() = Category(id.value, name, imageUrl)
 }

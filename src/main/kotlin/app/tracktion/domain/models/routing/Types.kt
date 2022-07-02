@@ -8,7 +8,11 @@ import kotlinx.serialization.Serializable
 class Types {
     @Serializable
     @Resource("categories")
-    class Categories(val parent: Types = Types())
+    class Categories(val parent: Types = Types()) {
+        @Serializable
+        @Resource("{name}/exercises")
+        class Exercises(val parent: Categories = Categories(), val name: String)
+    }
 
     @Serializable
     @Resource("muscles")
