@@ -124,4 +124,28 @@ fun Route.typesController(
             is Failed -> call.respond(response.status, ApiResponse.fail(response.message))
         }
     }
+
+    get<Types.Splits.Exercises> { category ->
+        val limit = getLimit()
+        val offset = call.request.queryParameters["offset"]?.toLong() ?: 0
+
+        val name = category.name.replace('_', ' ')
+
+        when (val response = splitService.getExercisesForSplit(name, limit, offset)) {
+            is Success -> {
+                val count = splitService.getExerciseCountFor(name)
+                call.respond(
+                    response.status,
+                    ApiResponse.success(
+                        response.data,
+                        count,
+                        limit,
+                        getPreviousOffset(limit, offset),
+                        getNextOffset(limit, offset, count)
+                    )
+                )
+            }
+            is Failed -> call.respond(response.status, ApiResponse.fail(response.message))
+        }
+    }
 }
