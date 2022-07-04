@@ -10,7 +10,7 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 
-fun Application.configureExposed(environment: ApplicationEnvironment) {
+fun Application.configureExposed() {
     Database.connect(hikari(environment))
     transaction {
         SchemaUtils.create(

@@ -10,7 +10,7 @@ fun main(args: Array<String>): Unit =
 
 @Suppress("unused")
 fun Application.module() {
-    configureExposed(environment)
+    configureExposed()
 
     val userRepository = UserRepository()
     val jwtService = JwtService(environment)

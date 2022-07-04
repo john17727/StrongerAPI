@@ -13,3 +13,13 @@ fun PipelineContext<Unit, ApplicationCall>.getLimit(): Int {
         }
     }
 }
+
+fun Int.prependZeroes(): String {
+    val stringID = this.toString()
+    val prependLength = 6 - stringID.length
+    var prefixString = ""
+    for (i in 1..prependLength) {
+        prefixString += "0"
+    }
+    return prefixString + stringID
+}

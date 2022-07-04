@@ -1,5 +1,6 @@
 package app.tracktion.domain.daos
 
+import app.tracktion.data.utilities.prependZeroes
 import app.tracktion.domain.interfaces.Mapper
 import app.tracktion.domain.models.Exercise
 import app.tracktion.domain.models.Instruction
@@ -35,6 +36,18 @@ class ExerciseDAO(id: EntityID<Int>) : IntEntity(id), Mapper<Exercise> {
         name,
         imageUrl,
         videoUrl,
+        getInstructions(),
+        muscle.toModel(),
+        category.toModel(),
+        equipment.toModel(),
+        split.toModel()
+    )
+
+    fun toModel(host: String) = Exercise(
+        id.value,
+        name,
+        imageUrl,
+        "$host/api/gifs/${id.value.prependZeroes()}",
         getInstructions(),
         muscle.toModel(),
         category.toModel(),
