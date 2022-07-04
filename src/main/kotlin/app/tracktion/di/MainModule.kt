@@ -8,7 +8,7 @@ import io.ktor.server.application.*
 
 object MainModule {
 
-    fun getExerciseService() = ExerciseService(ExerciseRepository())
+    fun getExerciseService(host: String) = ExerciseService(ExerciseRepository(host))
     fun getCategoryService() = CategoryService(CategoryRepository())
     fun getMuscleService() = MuscleService(MuscleRepository())
     fun getEquipmentService() = EquipmentService(EquipmentRepository())

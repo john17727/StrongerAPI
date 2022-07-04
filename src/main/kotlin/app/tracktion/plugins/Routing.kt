@@ -15,11 +15,12 @@ import io.ktor.server.routing.*
 import java.io.File
 
 fun Application.configureRouting(userRepository: Repository<User>, jwtService: JwtService) {
+    val host = environment.config.propertyOrNull("ktor.application.host")?.getString() ?: ""
     val categoryService = MainModule.getCategoryService()
     val muscleService = MainModule.getMuscleService()
     val equipmentService = MainModule.getEquipmentService()
     val splitService = MainModule.getSplitService()
-    val exerciseService = MainModule.getExerciseService()
+    val exerciseService = MainModule.getExerciseService(host)
     val userService = MainModule.getUserService(userRepository, environment)
     install(Resources)
     routing {
