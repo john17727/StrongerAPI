@@ -6,10 +6,10 @@ import app.tracktion.domain.interfaces.TypeRepository
 import app.tracktion.domain.models.Split
 import app.tracktion.plugins.dbQuery
 
-class SplitRepository : TypeRepository<Split> {
+class SplitRepository(private val host: String) : TypeRepository<Split> {
     override suspend fun getExercisesFor(name: String, limit: Int, offset: Long) = dbQuery {
         SplitDAO.find { Splits.name eq name }.first()
-            .exercises.limit(limit, offset).map { it.toModel() }
+            .exercises.limit(limit, offset).map { it.toModel(host) }
     }
 
     override suspend fun getExerciseCountFor(name: String) = dbQuery {

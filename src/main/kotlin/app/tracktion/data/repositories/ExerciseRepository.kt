@@ -5,7 +5,7 @@ import app.tracktion.domain.interfaces.ReadRepository
 import app.tracktion.domain.models.Exercise
 import app.tracktion.plugins.dbQuery
 
-class ExerciseRepository(val host: String) : ReadRepository<Exercise> {
+class ExerciseRepository(private val host: String) : ReadRepository<Exercise> {
     override suspend fun findById(id: Int) = dbQuery {
         getDAOById(id)?.toModel(host)
     }

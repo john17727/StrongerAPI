@@ -9,10 +9,10 @@ import app.tracktion.domain.models.Exercise
 import app.tracktion.plugins.dbQuery
 import org.jetbrains.exposed.sql.transactions.transaction
 
-class CategoryRepository : TypeRepository<Category> {
+class CategoryRepository(private val host: String) : TypeRepository<Category> {
     override suspend fun getExercisesFor(name: String, limit: Int, offset: Long) = dbQuery {
         CategoryDAO.find { Categories.name eq name }.first()
-            .exercises.limit(limit, offset).map { it.toModel() }
+            .exercises.limit(limit, offset).map { it.toModel(host) }
     }
 
     override suspend fun getExerciseCountFor(name: String) = dbQuery {
