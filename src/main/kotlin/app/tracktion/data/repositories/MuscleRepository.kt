@@ -6,10 +6,10 @@ import app.tracktion.domain.interfaces.TypeRepository
 import app.tracktion.domain.models.Muscle
 import app.tracktion.plugins.dbQuery
 
-class MuscleRepository : TypeRepository<Muscle> {
+class MuscleRepository(private val host: String) : TypeRepository<Muscle> {
     override suspend fun getExercisesFor(name: String, limit: Int, offset: Long) = dbQuery {
         MuscleDAO.find { Muscles.name eq name }.first()
-            .exercises.limit(limit, offset).map { it.toModel() }
+            .exercises.limit(limit, offset).map { it.toModel(host) }
     }
 
     override suspend fun getExerciseCountFor(name: String) = dbQuery {

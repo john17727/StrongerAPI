@@ -3,14 +3,13 @@ package app.tracktion.data.repositories
 import app.tracktion.domain.daos.EquipmentDAO
 import app.tracktion.domain.interfaces.TypeRepository
 import app.tracktion.domain.models.Equipment
-import app.tracktion.domain.models.Exercise
 import app.tracktion.plugins.dbQuery
 import app.tracktion.domain.daos.Equipment as EquipmentEntity
 
-class EquipmentRepository : TypeRepository<Equipment> {
+class EquipmentRepository(private val host: String) : TypeRepository<Equipment> {
     override suspend fun getExercisesFor(name: String, limit: Int, offset: Long) = dbQuery {
         EquipmentDAO.find { EquipmentEntity.name eq name }.first()
-            .exercises.limit(limit, offset).map { it.toModel() }
+            .exercises.limit(limit, offset).map { it.toModel(host) }
     }
 
     override suspend fun getExerciseCountFor(name: String) = dbQuery {
